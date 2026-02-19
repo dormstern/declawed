@@ -1,6 +1,6 @@
 {
   "name": "declawed",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Your AI agent has your credentials. This gives it rules. Policy, audit, kill switch for OpenClaw agents.",
   "type": "module",
   "main": "dist/index.js",
