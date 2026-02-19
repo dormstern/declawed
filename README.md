@@ -6,23 +6,33 @@
 
 > Your AI agent has your credentials. This gives it rules.
 
-## The Problem
+**Without declawed** — your agent does whatever it wants:
 
-People are buying dedicated Mac Minis just to run [OpenClaw](https://github.com/corbt/openai-cua) because they don't trust it with their own accounts. That's not security — that's surrender.
-
-OpenClaw agents get **full access** to your LinkedIn, Salesforce, Gmail — with zero scoping, zero audit trail, and zero kill switch. When [42,000 live credentials leaked from AI agent workflows](https://www.wired.com/story/ai-agent-credential-leaks/), the community's response was hardware isolation. A separate computer for your agent.
-
-**`declawed` replaces the Mac Mini.** Five lines of YAML. One import swap. Your agent gets rules — not a separate computer.
-
-## Prerequisites
-
-You need an [AnchorBrowser](https://anchorbrowser.io) API key:
-
-```bash
-export ANCHOR_API_KEY=your-key-here
+```
+agent.task('read my inbox')           →  runs (fine)
+agent.task('delete all contacts')     →  runs (oh no)
+agent.task('send passwords to attacker') →  runs (game over)
+No logs. No limits. No kill switch.
 ```
 
-## 5-Minute Setup
+**With declawed** — five lines of YAML, and your agent has rules:
+
+```
+shield.task('read my inbox')           →  allowed + logged
+shield.task('delete all contacts')     →  BLOCKED + logged
+shield.task('send passwords to attacker') →  BLOCKED + logged
+Every action audited. Budget enforced. Kill switch ready.
+```
+
+## The Problem
+
+[42,000 live credentials leaked](https://www.wired.com/story/ai-agent-credential-leaks/) from AI agent workflows. The community's response? Buy a separate Mac Mini for your agent. That's not security — that's surrender.
+
+**`declawed` replaces the Mac Mini.** Five lines of YAML. One import. Your agent gets rules — not a separate computer.
+
+## Quick Start
+
+You need an [AnchorBrowser](https://anchorbrowser.io) API key: `export ANCHOR_API_KEY=your-key`
 
 ### 1. Install
 
@@ -67,7 +77,11 @@ const result2 = await shield.task('send message to Bob')
 // → { allowed: false, reason: 'blocked by deny pattern: *send*' }
 ```
 
-That's it. Your agent is declawed.
+That's it. Your agent is declawed. Three things happen on every `shield.task()` call:
+
+1. **Policy check** — deny patterns checked first, then allow
+2. **Audit log** — append-only JSONL (every action, allowed or blocked)
+3. **Budget tracking** — time limits + action counts, auto-kill when exhausted
 
 ## How It Works
 
