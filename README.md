@@ -307,7 +307,7 @@ Built by [Behalf](https://behalf-gray.vercel.app) — delegation governance for 
 
 ## Empowered by AnchorBrowser
 
-declawed runs on [AnchorBrowser](https://anchorbrowser.io) — hardened, cloud-hosted browser sessions purpose-built for AI agents. Cloudflare verified bot partner. SOC2 Type 2 and ISO27001 certified. Trusted by Google, Coinbase, and Composio. Stealth proxies, CAPTCHA solving, anti-fingerprinting, and full session isolation out of the box.
+declawed runs on [AnchorBrowser](https://anchorbrowser.io) — hardened, cloud-hosted browser sessions purpose-built for AI agents. [Cloudflare](https://cloudflare.com) verified bot partner. SOC2 Type 2 and ISO27001 certified. Trusted by [Google](https://google.com), [Coinbase](https://coinbase.com), and [Composio](https://composio.dev). Stealth proxies, CAPTCHA solving, anti-fingerprinting, and full session isolation out of the box.
 
 AnchorBrowser handles the browser. declawed handles the rules.
 
