@@ -79,33 +79,25 @@ Your credentials live in AnchorBrowser, not in your code. Your agent never sees 
 3. **Audit + kill switch** — every action logged (allowed and blocked). Budget enforced. Instant session destruction when you're done.
 
 ```mermaid
-flowchart LR
-    subgraph setup ["🔑 ONE-TIME SETUP (you, 5 min)"]
-        direction TB
-        A["Create AnchorBrowser profile"] --> B["Log into LinkedIn / Gmail manually"]
-        B --> C["Auth saved — cookies persisted\n<i>Your password never leaves AnchorBrowser</i>"]
-    end
+flowchart TD
+    A["🔑 <b>One-time setup</b><br/>Create AnchorBrowser profile<br/>Log into LinkedIn / Gmail manually<br/>Auth saved — password never leaves AnchorBrowser"] --> D
 
-    subgraph runtime ["🤖 EVERY AGENT RUN (automated)"]
-        direction TB
-        D["Agent calls\n<b>shield.task('check inbox')</b>"] --> E{"<b>declawed</b>\nPolicy check\n<i>allow: read*, list*\ndeny: *delete*, *send*</i>"}
-        E -->|"✅ Allowed"| F["AnchorBrowser opens\nephemeral session\nwith YOUR profile\n<i>(already logged in)</i>"]
-        E -->|"❌ Blocked"| G["Stopped + logged\nAgent never reaches\nyour account"]
-        F --> H["Task executes in\nisolated cloud browser"]
-        H --> I["Result returned\nto agent"]
-        G --> J["📝 Audit log\n⏱️ Budget tracking"]
-        I --> J
-    end
+    D["🤖 Agent calls <b>shield.task</b>"] --> E{"🛡️ <b>declawed</b><br/>Policy check"}
 
-    subgraph never ["🚫 AGENT NEVER GETS"]
-        K["Your password"]
-        L["Direct browser access"]
-        M["Unscoped permissions"]
-    end
+    E -->|"✅ Allowed"| F["☁️ <b>AnchorBrowser</b><br/>Ephemeral cloud session<br/>with your saved profile<br/>Already logged in"]
+    E -->|"❌ Blocked"| G["🚫 <b>Stopped</b><br/>Agent never reaches<br/>your account"]
 
-    style G fill:#d32f2f,color:#fff
+    F --> H["Task executes in<br/>isolated cloud browser"]
+    H --> I["Result returned to agent"]
+
+    G --> J["📝 Every action logged"]
+    I --> J
+    J --> K["⏱️ Budget enforced<br/>🔴 Kill switch ready"]
+
+    style A fill:#1565c0,color:#fff
+    style E fill:#f57f17,color:#fff
     style F fill:#388e3c,color:#fff
-    style C fill:#1565c0,color:#fff
+    style G fill:#d32f2f,color:#fff
 ```
 
 ## CLI
