@@ -1,0 +1,54 @@
+{
+  "name": "behalf-shield",
+  "version": "0.1.0",
+  "description": "Governance layer for AI agent browser sessions — policy, audit, kill switch",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "behalf-shield": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "ai-agent",
+    "governance",
+    "security",
+    "openclaw",
+    "browser-automation",
+    "policy",
+    "audit",
+    "kill-switch"
+  ],
+  "author": "Behalf",
+  "license": "MIT",
+  "dependencies": {
+    "anchorbrowser": "^0.14.0",
+    "js-yaml": "^4.1.0",
+    "picomatch": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.0",
+    "@types/picomatch": "^3.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

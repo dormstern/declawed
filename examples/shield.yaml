@@ -1,0 +1,15 @@
+agent: inbox-assistant
+rules:
+  allow:
+    - "read*"
+    - "list*"
+    - "check*"
+    - "search*"
+  deny:
+    - "*send*"
+    - "*delete*"
+    - "*settings*"
+    - "*password*"
+default: deny
+expire_after: 60min
+max_actions: 100
