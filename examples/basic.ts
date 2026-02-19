@@ -1,4 +1,4 @@
-import { createShield } from '../src/index.js'
+import { createShield } from 'declawed'
 
 // Create a shield with inline policy
 const shield = createShield({

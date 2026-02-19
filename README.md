@@ -1,4 +1,8 @@
-# Behalf Shield
+# declawed
+
+[![npm version](https://img.shields.io/npm/v/declawed)](https://www.npmjs.com/package/declawed)
+[![license](https://img.shields.io/npm/l/declawed)](./LICENSE)
+[![tests](https://img.shields.io/badge/tests-61%20passing-brightgreen)](#)
 
 > Your AI agent has your credentials. This gives it rules.
 
@@ -8,14 +12,22 @@ People are buying dedicated Mac Minis just to run [OpenClaw](https://github.com/
 
 OpenClaw agents get **full access** to your LinkedIn, Salesforce, Gmail — with zero scoping, zero audit trail, and zero kill switch. When [42,000 live credentials leaked from AI agent workflows](https://www.wired.com/story/ai-agent-credential-leaks/), the community's response was hardware isolation. A separate computer for your agent.
 
-**Shield replaces the Mac Mini.** Five lines of YAML. One import swap. Your agent gets rules — not a separate computer.
+**`declawed` replaces the Mac Mini.** Five lines of YAML. One import swap. Your agent gets rules — not a separate computer.
+
+## Prerequisites
+
+You need an [AnchorBrowser](https://anchorbrowser.io) API key:
+
+```bash
+export ANCHOR_API_KEY=your-key-here
+```
 
 ## 5-Minute Setup
 
 ### 1. Install
 
 ```bash
-npm install behalf-shield
+npm install declawed
 ```
 
 ### 2. Write a policy
@@ -43,7 +55,7 @@ max_actions: 100
 ### 3. Wrap your agent
 
 ```typescript
-import { createShield } from 'behalf-shield'
+import { createShield } from 'declawed'
 
 const shield = createShield('./shield.yaml')
 
@@ -55,14 +67,14 @@ const result2 = await shield.task('send message to Bob')
 // → { allowed: false, reason: 'blocked by deny pattern: *send*' }
 ```
 
-That's it. Your agent now has rules.
+That's it. Your agent is declawed.
 
 ## How It Works
 
 ```
 Your Code
     ↓
-behalf-shield (policy check + audit)
+declawed (policy check + audit)
     ├── Task allowed? → AnchorBrowser → Target App
     └── Task denied?  → Blocked + logged
 ```
@@ -162,21 +174,21 @@ await shield.kill()
 ### From terminal
 
 ```bash
-npx behalf-shield kill
+npx declawed kill
 # → Session mock-session-123 killed.
 ```
 
 ### Check status
 
 ```bash
-npx behalf-shield status
+npx declawed status
 # Agent:   inbox-assistant
 # Status:  active
 # Allowed: 23
 # Blocked: 3
 # Total:   27
 
-npx behalf-shield audit
+npx declawed audit
 # Time                      Action    Task
 # ─────────────────────────────────────────────
 # 2026-02-19 10:00:00  allowed   read my inbox
@@ -252,12 +264,28 @@ const status = shield.status()
 - Matching is **case-insensitive** on the full task string
 - **Deny rules checked first** — deny always takes priority
 - If no match → falls back to `default` (`deny` or `allow`)
+- Invisible Unicode characters are stripped before matching (zero-width spaces, combining diacriticals, BiDi controls)
+
+## Security
+
+- Deny-first evaluation — deny rules always take priority over allow
+- Unicode bypass protection — invisible characters stripped before pattern matching
+- YAML type validation — non-string patterns rejected at load time
+- Fail-closed — errors during execution are logged and reported as blocked
+- Session file permissions — restricted to owner-only (0o600)
+- Action budgets — only allowed tasks consume quota (blocked tasks are free)
+
+For vulnerability reports, see [SECURITY.md](./SECURITY.md).
+
+## Testing
+
+61 tests covering the governance boundary: policy evaluation, deny-first ordering, Unicode bypass vectors, YAML validation, audit logging, budget enforcement, concurrent access, timer expiration, kill idempotency, and fail-closed behavior. AnchorBrowser is mocked because Shield's job is policy enforcement, not browser automation — if the browser fails, Shield fails closed.
 
 ## Why This Exists
 
 AI agents are getting credential access with zero governance. The OpenClaw credential leak showed what happens when agents operate without rules — 42,000 live credentials exposed. The community's workaround is buying separate hardware. That's expensive, fragile, and doesn't scale.
 
-Shield gives agents what they should have had from the start: **a policy file, an audit log, and a kill switch.**
+`declawed` gives agents what they should have had from the start: **a policy file, an audit log, and a kill switch.**
 
 5 lines of YAML. One import. Zero new infrastructure.
 

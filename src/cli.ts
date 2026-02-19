@@ -21,7 +21,7 @@ async function main() {
       printAudit()
       break
     default:
-      console.log('Usage: behalf-shield <kill|status|audit>')
+      console.log('Usage: declawed <kill|status|audit>')
       console.log('')
       console.log('Commands:')
       console.log('  kill    Kill the active Shield session')

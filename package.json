@@ -1,7 +1,7 @@
 {
-  "name": "behalf-shield",
+  "name": "declawed",
   "version": "0.1.0",
-  "description": "Governance layer for AI agent browser sessions — policy, audit, kill switch",
+  "description": "Your AI agent has your credentials. This gives it rules. Policy, audit, kill switch for OpenClaw agents.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +12,7 @@
     }
   },
   "bin": {
-    "behalf-shield": "dist/cli.js"
+    "declawed": "dist/cli.js"
   },
   "scripts": {
     "build": "tsc",
@@ -25,13 +25,24 @@
     "governance",
     "security",
     "openclaw",
+    "declawed",
     "browser-automation",
     "policy",
     "audit",
-    "kill-switch"
+    "kill-switch",
+    "credential-safety",
+    "agent-security"
   ],
-  "author": "Behalf",
+  "author": "Behalf (https://behalf-gray.vercel.app)",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dormstern/declawed.git"
+  },
+  "homepage": "https://github.com/dormstern/declawed#readme",
+  "bugs": {
+    "url": "https://github.com/dormstern/declawed/issues"
+  },
   "dependencies": {
     "anchorbrowser": "^0.14.0",
     "js-yaml": "^4.1.0",
@@ -46,7 +57,8 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "SECURITY.md"
   ],
   "engines": {
     "node": ">=18"

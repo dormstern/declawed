@@ -4,7 +4,7 @@
  * Instead of giving the agent unrestricted access to your email,
  * Shield enforces read-only access with a 1-hour time limit.
  */
-import { createShield } from '../src/index.js'
+import { createShield } from 'declawed'
 
 // Load policy from YAML (production pattern)
 const shield = createShield('./examples/shield.yaml')
