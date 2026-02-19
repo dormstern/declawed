@@ -70,29 +70,42 @@ That's it. Every `shield.task()` call is policy-checked, audited, and budgeted.
 
 ## How It Protects You
 
-Your agent never touches your real browser. Every task goes through a policy checkpoint, then executes in a sandboxed cloud browser.
+Your credentials live in AnchorBrowser, not in your code. Your agent never sees your password — it gets a scoped, ephemeral session, and declawed controls what it can do.
+
+**Three layers of protection:**
+
+1. **Credential isolation** — your password stays in AnchorBrowser. The agent gets a pre-authenticated session, never the credentials themselves.
+2. **Scoped permissions** — the agent can only do what your policy allows. Read inbox? Yes. Delete contacts? Blocked. It can't go beyond the scope you define.
+3. **Audit + kill switch** — every action logged (allowed and blocked). Budget enforced. Instant session destruction when you're done.
 
 ```mermaid
-flowchart TD
-    A["Your code calls<br/><b>shield.task('delete all contacts')</b>"] --> B{"<b>Step 1:</b> Check deny patterns<br/><i>*delete*, *send*, *password*</i>"}
-    B -->|"❌ *delete* matches!"| C["🚫 <b>BLOCKED</b><br/>Returns immediately<br/>Agent never reaches your account"]
-    B -->|"No deny match"| D{"<b>Step 2:</b> Check allow patterns<br/><i>read*, list*, check*</i>"}
-    D -->|"✅ Pattern matches"| E["✅ <b>ALLOWED</b>"]
-    D -->|"No allow match"| F{"<b>Step 3:</b> Default policy"}
-    F -->|"default: deny"| C
-    F -->|"default: allow"| E
+flowchart LR
+    subgraph setup ["🔑 ONE-TIME SETUP (you, 5 min)"]
+        direction TB
+        A["Create AnchorBrowser profile"] --> B["Log into LinkedIn / Gmail manually"]
+        B --> C["Auth saved — cookies persisted\n<i>Your password never leaves AnchorBrowser</i>"]
+    end
 
-    E --> G["☁️ <b>AnchorBrowser</b><br/>Ephemeral, isolated cloud browser session<br/>Opens real Chrome, executes task<br/>Session auto-expires — nothing persists"]
-    G --> H["Result returned to your code"]
+    subgraph runtime ["🤖 EVERY AGENT RUN (automated)"]
+        direction TB
+        D["Agent calls\n<b>shield.task('check inbox')</b>"] --> E{"<b>declawed</b>\nPolicy check\n<i>allow: read*, list*\ndeny: *delete*, *send*</i>"}
+        E -->|"✅ Allowed"| F["AnchorBrowser opens\nephemeral session\nwith YOUR profile\n<i>(already logged in)</i>"]
+        E -->|"❌ Blocked"| G["Stopped + logged\nAgent never reaches\nyour account"]
+        F --> H["Task executes in\nisolated cloud browser"]
+        H --> I["Result returned\nto agent"]
+        G --> J["📝 Audit log\n⏱️ Budget tracking"]
+        I --> J
+    end
 
-    C --> I["📝 <b>Audit Log</b><br/>Every action logged to shield-audit.jsonl<br/>Allowed AND blocked — append-only"]
-    H --> I
+    subgraph never ["🚫 AGENT NEVER GETS"]
+        K["Your password"]
+        L["Direct browser access"]
+        M["Unscoped permissions"]
+    end
 
-    I --> J["⏱️ <b>Budget &amp; Kill Switch</b><br/>Action count · Time limit · Instant kill"]
-
-    style C fill:#d32f2f,color:#fff
-    style E fill:#388e3c,color:#fff
-    style G fill:#1565c0,color:#fff
+    style G fill:#d32f2f,color:#fff
+    style F fill:#388e3c,color:#fff
+    style C fill:#1565c0,color:#fff
 ```
 
 ## CLI
