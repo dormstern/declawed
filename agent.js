@@ -1,8 +1,8 @@
-#!/usr/bin/env npx tsx
-// Demo script for declawed — shows policy enforcement with colorized output
-// Used for GIF recording with VHS (appears as "node agent.js" in the tape)
+#!/usr/bin/env node
+// Demo: an OpenClaw sales bot — governed by declawed
+// This is what it looks like when your agent has rules.
 
-import { loadPolicy, evaluatePolicy } from '../src/policy.js'
+import { loadPolicy, evaluatePolicy } from './dist/policy.js'
 
 const GREEN = '\x1b[32m'
 const RED = '\x1b[31m'

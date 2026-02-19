@@ -2,13 +2,19 @@
 
 > Your AI agent has your credentials. This gives it rules.
 
-Policy, audit, kill switch — in 5 lines of YAML.
+Policy, audit, kill switch for OpenClaw agents, AI work assistants, and any bot with access to your accounts.
 
 [![npm version](https://img.shields.io/npm/v/declawed)](https://www.npmjs.com/package/declawed)
 [![license](https://img.shields.io/npm/l/declawed)](./LICENSE)
 [![tests](https://img.shields.io/badge/tests-61%20passing-brightgreen)](#)
 
-![declawed demo](docs/demos/declawed-demo.gif)
+### OpenClaw sales bot — declawed
+
+![OpenClaw demo](docs/demos/openclaw-demo.gif)
+
+### Work assistant (Claude, Devin, etc.) — declawed
+
+![Work assistant demo](docs/demos/work-assistant-demo.gif)
 
 ## The Problem
 
@@ -29,19 +35,21 @@ npm install declawed
 Create `shield.yaml`:
 
 ```yaml
-agent: inbox-assistant
+agent: my-openclaw-sales-bot
 rules:
   allow:
     - "read*"
     - "list*"
+    - "check*"
     - "search*"
   deny:
     - "*send*"
     - "*delete*"
+    - "*export*"
     - "*password*"
 default: deny
 expire_after: 60min
-max_actions: 100
+max_actions: 50
 ```
 
 ### 3. Wrap your agent
@@ -51,11 +59,11 @@ import { createShield } from 'declawed'
 
 const shield = createShield('./shield.yaml')
 
-const result = await shield.task('read my inbox')
+const result = await shield.task('check linkedin inbox')
 // → { allowed: true, output: '...' }
 
-const result2 = await shield.task('delete all contacts')
-// → { allowed: false, reason: 'blocked by deny pattern: *delete*' }
+const result2 = await shield.task('export all contacts to CSV')
+// → { allowed: false, reason: 'blocked by deny pattern: *export*' }
 ```
 
 That's it. Every `shield.task()` call is policy-checked, audited, and budgeted.
@@ -73,7 +81,7 @@ declawed (policy check + audit)
 ## CLI
 
 ```bash
-npx declawed status   # Agent: inbox-assistant | Allowed: 23 | Blocked: 3
+npx declawed status   # Agent: my-openclaw-sales-bot | Allowed: 23 | Blocked: 3
 npx declawed audit    # Full audit trail
 npx declawed kill     # Kill switch — destroy session immediately
 ```

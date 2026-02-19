@@ -1,7 +1,7 @@
-Output docs/demos/declawed-demo.gif
+Output docs/demos/openclaw-demo.gif
 Set FontSize 15
-Set Width 860
-Set Height 420
+Set Width 880
+Set Height 400
 Set Theme "Catppuccin Mocha"
 Set Padding 20
 Set TypingSpeed 50ms
