@@ -305,6 +305,12 @@ AI agents are getting credential access with zero governance. The OpenClaw crede
 
 Built by [Behalf](https://behalf-gray.vercel.app) — delegation governance for the agent era.
 
+## Empowered by AnchorBrowser
+
+declawed runs on [AnchorBrowser](https://anchorbrowser.io) — hardened, cloud-hosted browser sessions purpose-built for AI agents. Stealth proxies, CAPTCHA solving, anti-fingerprinting, and full session isolation out of the box. AnchorBrowser handles the browser. declawed handles the rules.
+
+[Get an API key →](https://anchorbrowser.io)
+
 ## License
 
 MIT
