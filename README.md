@@ -82,7 +82,7 @@ flowchart TD
     F -->|"default: deny"| C
     F -->|"default: allow"| E
 
-    E --> G["☁️ <b>AnchorBrowser</b><br/>Sandboxed cloud browser<br/>Opens real Chrome, executes task<br/>Your machine is never involved"]
+    E --> G["☁️ <b>AnchorBrowser</b><br/>Ephemeral, isolated cloud browser session<br/>Opens real Chrome, executes task<br/>Session auto-expires — nothing persists"]
     G --> H["Result returned to your code"]
 
     C --> I["📝 <b>Audit Log</b><br/>Every action logged to shield-audit.jsonl<br/>Allowed AND blocked — append-only"]
@@ -107,7 +107,7 @@ npx declawed kill     # Kill switch — destroy session immediately
 
 ## Empowered by AnchorBrowser
 
-declawed runs on [AnchorBrowser](https://anchorbrowser.io) — hardened, cloud-hosted browser sessions purpose-built for AI agents. [Cloudflare](https://cloudflare.com) verified bot partner. SOC2 Type 2 and ISO27001 certified. Trusted by [Google](https://google.com), [Coinbase](https://coinbase.com), and [Composio](https://composio.dev). Stealth proxies, CAPTCHA solving, anti-fingerprinting, and full session isolation out of the box.
+declawed runs on [AnchorBrowser](https://anchorbrowser.io) — ephemeral, hardened cloud browser sessions purpose-built for AI agents. Each session is isolated, auto-expires, and leaves no trace. [Cloudflare](https://cloudflare.com) verified bot partner. SOC2 Type 2 and ISO27001 certified. Trusted by [Google](https://google.com), [Coinbase](https://coinbase.com), and [Composio](https://composio.dev). Stealth proxies, CAPTCHA solving, anti-fingerprinting, and full session isolation out of the box.
 
 AnchorBrowser handles the browser. declawed handles the rules.
 
