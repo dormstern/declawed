@@ -68,14 +68,31 @@ const result2 = await shield.task('export all contacts to CSV')
 
 That's it. Every `shield.task()` call is policy-checked, audited, and budgeted.
 
-## How It Works
+## How It Protects You
 
-```
-Your Code
-    ↓
-declawed (policy check + audit)
-    ├── Task allowed? → AnchorBrowser → Target App
-    └── Task denied?  → Blocked + logged
+Your agent never touches your real browser. Every task goes through a policy checkpoint, then executes in a sandboxed cloud browser.
+
+```mermaid
+flowchart TD
+    A["Your code calls<br/><b>shield.task('delete all contacts')</b>"] --> B{"<b>Step 1:</b> Check deny patterns<br/><i>*delete*, *send*, *password*</i>"}
+    B -->|"❌ *delete* matches!"| C["🚫 <b>BLOCKED</b><br/>Returns immediately<br/>Agent never reaches your account"]
+    B -->|"No deny match"| D{"<b>Step 2:</b> Check allow patterns<br/><i>read*, list*, check*</i>"}
+    D -->|"✅ Pattern matches"| E["✅ <b>ALLOWED</b>"]
+    D -->|"No allow match"| F{"<b>Step 3:</b> Default policy"}
+    F -->|"default: deny"| C
+    F -->|"default: allow"| E
+
+    E --> G["☁️ <b>AnchorBrowser</b><br/>Sandboxed cloud browser<br/>Opens real Chrome, executes task<br/>Your machine is never involved"]
+    G --> H["Result returned to your code"]
+
+    C --> I["📝 <b>Audit Log</b><br/>Every action logged to shield-audit.jsonl<br/>Allowed AND blocked — append-only"]
+    H --> I
+
+    I --> J["⏱️ <b>Budget &amp; Kill Switch</b><br/>Action count · Time limit · Instant kill"]
+
+    style C fill:#d32f2f,color:#fff
+    style E fill:#388e3c,color:#fff
+    style G fill:#1565c0,color:#fff
 ```
 
 ## CLI
