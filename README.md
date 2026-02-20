@@ -2,11 +2,11 @@
 
 > Your AI agent has your credentials. This gives it rules.
 
-Policy, audit, kill switch for OpenClaw agents, AI work assistants, and any bot with access to your accounts.
+Policy, audit, kill switch for any AI agent with access to your accounts.
 
 [![npm version](https://img.shields.io/npm/v/declawed)](https://www.npmjs.com/package/declawed)
 [![license](https://img.shields.io/npm/l/declawed)](./LICENSE)
-[![tests](https://img.shields.io/badge/tests-61%20passing-brightgreen)](#)
+[![tests](https://img.shields.io/badge/tests-67%20passing-brightgreen)](#)
 
 ### OpenClaw sales bot — declawed
 
@@ -67,6 +67,93 @@ const result2 = await shield.task('export all contacts to CSV')
 ```
 
 That's it. Every `shield.task()` call is policy-checked, audited, and budgeted.
+
+## Common Use Cases
+
+People give agents their passwords every day. Here's what they're afraid of — and how `declawed` fixes it.
+
+### 1. LinkedIn Sales Agent (OpenClaw)
+
+**The fear:** Your bot has your LinkedIn password. It's supposed to read your inbox and check messages. But what if it starts mass-connecting, exporting contacts, or changing your profile?
+
+**With declawed:**
+
+```yaml
+agent: linkedin-sales-bot
+rules:
+  allow:
+    - "read*"
+    - "list*"
+    - "check*"
+    - "search*"
+  deny:
+    - "*send*"
+    - "*connect*"
+    - "*export*"
+    - "*settings*"
+    - "*password*"
+default: deny
+expire_after: 60min
+max_actions: 50
+```
+
+Read inbox, check messages — allowed. Mass-connect, export contacts — blocked before it starts.
+
+### 2. Email & Calendar Assistant
+
+**The fear:** Your assistant has your Gmail. It reads your calendar and summarizes emails. But what if it deletes messages, forwards sensitive emails externally, or changes your billing settings?
+
+**With declawed:**
+
+```yaml
+agent: daily-briefing
+rules:
+  allow:
+    - "read*"
+    - "list*"
+    - "check*"
+    - "summarize*"
+  deny:
+    - "*delete*"
+    - "*forward*"
+    - "*billing*"
+    - "*settings*"
+    - "*password*"
+default: deny
+expire_after: 30min
+max_actions: 100
+```
+
+Read calendar, list emails, summarize threads — allowed. Delete, forward, change settings — blocked.
+
+### 3. CRM Data Entry Bot
+
+**The fear:** Your bot updates Salesforce records from your email threads. But what if it bulk-deletes contacts, exports your pipeline, or modifies deal values?
+
+**With declawed:**
+
+```yaml
+agent: crm-updater
+rules:
+  allow:
+    - "read*"
+    - "update*"
+    - "list*"
+    - "search*"
+  deny:
+    - "*delete*"
+    - "*export*"
+    - "*bulk*"
+    - "*admin*"
+    - "*billing*"
+default: deny
+expire_after: 45min
+max_actions: 200
+```
+
+Read records, update fields, search contacts — allowed. Bulk-delete, export pipeline, admin changes — blocked.
+
+---
 
 ## How It Protects You
 
