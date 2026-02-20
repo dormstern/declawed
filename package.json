@@ -1,7 +1,7 @@
 {
   "name": "leashed",
   "version": "0.1.1",
-  "description": "Your AI agent has your credentials. This gives it rules. Policy, audit, kill switch for OpenClaw agents.",
+  "description": "AI got hands. This is the leash. Policy, audit, kill switch for any AI agent with access to your accounts.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
