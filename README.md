@@ -2,7 +2,7 @@
 
 > AI got hands. This is the leash.
 
-Your agent gets be-half the access. The safe half. Policy, audit, kill switch for any AI agent with access to your accounts.
+Policy, audit, kill switch for any AI agent with access to your accounts.
 
 [![npm version](https://img.shields.io/npm/v/leashed)](https://www.npmjs.com/package/leashed)
 [![license](https://img.shields.io/npm/l/leashed)](./LICENSE)
