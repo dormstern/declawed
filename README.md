@@ -205,8 +205,41 @@ flowchart LR
 ### Three layers of protection
 
 1. **Credential isolation** — your password stays in an isolated cloud browser. The agent gets a pre-authenticated session, never the credentials themselves.
-2. **Scoped boundaries** — the agent can only do what your policy allows. Read inbox? Yes. Delete contacts? Blocked before it starts.
-3. **Audit + kill switch** — every action logged (allowed and blocked). Budget enforced. Instant session destruction when you're done.
+2. **Scoped boundaries** — tasks that don't match your policy are blocked before they start. Deny-first pattern matching with Unicode bypass protection.
+3. **Audit + kill switch** — every action logged (allowed and blocked). Budget enforced. Session destruction when you're done.
+
+## Security Model
+
+In security terms, leashed is **application-layer authz for AI agents** — it governs what agents are *authorized to do*, not who they are or what credentials they hold. Think of it like an AWS IAM policy that checks what you *request*, not what the underlying service *executes*.
+
+### What leashed enforces today (v0.1)
+
+| Layer | Enforced | How |
+|-------|----------|-----|
+| Task gating | Yes | Deny-first glob pattern matching on task strings |
+| Time + action budgets | Yes | Configurable expiration and action limits |
+| Credential isolation | Yes | Passwords stay in AnchorBrowser's isolated session, never exposed to the agent |
+| Session destruction | Yes | `leash.yank()` destroys the cloud browser session |
+| Audit trail | Yes | Every task request (allowed + blocked) logged to JSONL |
+| Unicode bypass protection | Yes | Strips zero-width chars, combining marks, BiDi controls |
+
+### What leashed does NOT enforce (yet)
+
+| Layer | Status | Why |
+|-------|--------|-----|
+| Browser action validation | Roadmap (v1.0) | AnchorBrowser executes tasks autonomously — leashed has no visibility into actual browser clicks/navigation |
+| URL/domain restrictions | Roadmap (v1.0) | Requires AnchorBrowser session-level allowlists (not yet available in their SDK) |
+| Semantic equivalence | By design | `"forward email"` and `"send email to myself"` are different strings — glob patterns match literally, not semantically |
+
+### The honest version
+
+The policy engine checks the **task description string** — the human-readable instruction you pass to `leash.task()`. If the string matches a deny pattern, it never reaches the browser. If it's allowed, AnchorBrowser's AI executes it autonomously.
+
+This means: a well-intentioned agent that uses descriptive task names gets real governance. A deliberately adversarial agent that lies about what it's doing can bypass pattern matching — just like a developer with an IAM read-only key could name their Lambda "ReadOnlyFunction" while it actually writes to S3.
+
+**leashed is a seatbelt, not a cage.** It stops the 95% of accidents that come from misconfiguration, scope creep, and unintended actions. It does not stop a determined attacker with direct API access.
+
+For defense-in-depth, see [SECURITY.md](./SECURITY.md).
 
 ## CLI
 
@@ -217,6 +250,23 @@ npx leashed yank     # Kill switch — destroy session immediately
 ```
 
 [Full API reference & policy examples →](./docs/API.md)
+
+## Roadmap
+
+leashed is v0.1 — the governance primitives. Here's what's coming:
+
+### v0.2 — Output Scanning
+- Post-execution validation: scan AnchorBrowser output for policy-violating content
+- Domain hints in policy: `domains: [linkedin.com]` for documentation and audit enrichment
+- Structured output schemas for safer result parsing
+
+### v1.0 — Session-Level Enforcement (with AnchorBrowser)
+- URL allowlists at the session level — the browser itself refuses to navigate outside your policy
+- Browser action audit trail — not just task requests, but actual clicks, form fills, and navigation
+- Webhook callbacks for real-time policy violation alerts
+- This is the "IAM enforcement" layer — restrictions enforced by the infrastructure, not just the intent
+
+Want to help shape v1.0? [Open an issue](https://github.com/dormstern/leashed/issues) or reach out.
 
 ## Empowered by AnchorBrowser
 

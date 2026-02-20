@@ -51,6 +51,7 @@ export function loadPolicy(configOrPath: string | LeashConfig): LeashConfig {
       default: policy.default ?? 'deny',
       expire: policy.expire_after,
       maxActions: policy.max_actions,
+      domains: policy.domains,
     }
   }
   return {

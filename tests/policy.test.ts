@@ -242,4 +242,23 @@ rules:
     writeFileSync(filePath, yamlContent)
     expect(() => loadPolicy(filePath)).toThrow('pattern must be a string')
   })
+
+  it('loads domains from YAML', () => {
+    const yamlContent = `
+agent: linkedin-bot
+rules:
+  allow:
+    - "read*"
+  deny:
+    - "*export*"
+domains:
+  - linkedin.com
+  - gmail.com
+default: deny
+`
+    const filePath = join(tmpDir, 'domains.yaml')
+    writeFileSync(filePath, yamlContent)
+    const config = loadPolicy(filePath)
+    expect(config.domains).toEqual(['linkedin.com', 'gmail.com'])
+  })
 })

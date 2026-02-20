@@ -2,13 +2,15 @@ import { writeFileSync, existsSync } from 'node:fs'
 import { loadPolicy, evaluatePolicy } from './policy.js'
 import { createAuditLogger, type AuditLogger } from './audit.js'
 import { createSessionManager, type SessionManager } from './session.js'
-import type { LeashConfig, LeashResult, AuditEvent, LeashStatus } from './types.js'
+import { scanOutput } from './output-scanner.js'
+import type { LeashConfig, LeashResult, AuditEvent, LeashStatus, OutputFlag } from './types.js'
 import { SESSION_FILE, DEFAULT_AUDIT_FILE } from './constants.js'
 
-export type { LeashConfig, LeashResult, AuditEvent, LeashStatus } from './types.js'
+export type { LeashConfig, LeashResult, AuditEvent, LeashStatus, OutputFlag } from './types.js'
 export { loadPolicy, evaluatePolicy, matchesPattern } from './policy.js'
 export { createAuditLogger } from './audit.js'
 export { createSessionManager } from './session.js'
+export { scanOutput } from './output-scanner.js'
 export { SESSION_FILE, DEFAULT_AUDIT_FILE } from './constants.js'
 
 export interface Leash {
@@ -98,6 +100,7 @@ export function createLeash(
           task: description,
           action: 'blocked',
           reason: expiredReason,
+          ...(config.domains?.length ? { domains: config.domains } : {}),
         }
         logger.log(event)
         blockedCount++
@@ -115,6 +118,7 @@ export function createLeash(
           task: description,
           action: 'blocked',
           reason: decision.reason,
+          ...(config.domains?.length ? { domains: config.domains } : {}),
         }
         logger.log(event)
         blockedCount++
@@ -136,6 +140,9 @@ export function createLeash(
           // Non-fatal: CLI yank won't work but task still succeeds
         }
 
+        // Post-execution output scan — detect deny keywords in output
+        const flags = scanOutput(output, config)
+
         const event: AuditEvent = {
           id: auditId,
           timestamp: new Date().toISOString(),
@@ -143,10 +150,15 @@ export function createLeash(
           task: description,
           action: 'allowed',
           duration,
+          ...(flags.length > 0 ? { flags } : {}),
+          ...(config.domains?.length ? { domains: config.domains } : {}),
         }
         logger.log(event)
         allowedCount++
-        return { allowed: true, output, auditId }
+
+        const result: LeashResult = { allowed: true, output, auditId }
+        if (flags.length > 0) result.flags = flags
+        return result
       } catch (err) {
         const event: AuditEvent = {
           id: auditId,

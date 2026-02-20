@@ -2,7 +2,7 @@
 
 import { readFileSync, existsSync } from 'node:fs'
 import AnchorClient from 'anchorbrowser'
-import type { AuditEvent } from './types.js'
+import { createAuditLogger } from './audit.js'
 import { SESSION_FILE, DEFAULT_AUDIT_FILE } from './constants.js'
 
 const AUDIT_FILE = DEFAULT_AUDIT_FILE
@@ -56,22 +56,8 @@ async function killSession() {
   try { unlinkSync(SESSION_FILE) } catch {}
 }
 
-function readAuditEvents(): AuditEvent[] {
-  if (!existsSync(AUDIT_FILE)) return []
-  const events: AuditEvent[] = []
-  for (const line of readFileSync(AUDIT_FILE, 'utf-8').split('\n')) {
-    if (!line.trim()) continue
-    try {
-      events.push(JSON.parse(line) as AuditEvent)
-    } catch {
-      // Skip corrupt lines
-    }
-  }
-  return events
-}
-
 function printStatus() {
-  const events = readAuditEvents()
+  const events = createAuditLogger(AUDIT_FILE).export()
   if (events.length === 0) {
     console.log('No audit events found.')
     return
@@ -80,6 +66,7 @@ function printStatus() {
   const allowed = events.filter(e => e.action === 'allowed').length
   const blocked = events.filter(e => e.action === 'blocked').length
   const errors = events.filter(e => e.action === 'error').length
+  const flagged = events.filter(e => e.flags && e.flags.length > 0).length
   const killed = events.some(e => e.action === 'killed')
   const agent = events[0]?.agent ?? 'unknown'
 
@@ -88,11 +75,12 @@ function printStatus() {
   console.log(`Allowed: ${allowed}`)
   console.log(`Blocked: ${blocked}`)
   console.log(`Errors:  ${errors}`)
+  console.log(`Flagged: ${flagged}`)
   console.log(`Total:   ${events.length}`)
 }
 
 function printAudit() {
-  const events = readAuditEvents()
+  const events = createAuditLogger(AUDIT_FILE).export()
   if (events.length === 0) {
     console.log('No audit events found.')
     return
@@ -106,7 +94,8 @@ function printAudit() {
     const action = e.action.padEnd(9)
     const task = e.task.length > 40 ? e.task.slice(0, 37) + '...' : e.task
     const reason = e.reason ? ` (${e.reason})` : ''
-    console.log(`${time}  ${action} ${task}${reason}`)
+    const flagIndicator = e.flags && e.flags.length > 0 ? ' [!]' : ''
+    console.log(`${time}  ${action} ${task}${reason}${flagIndicator}`)
   }
 }
 

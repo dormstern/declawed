@@ -317,4 +317,57 @@ describe('Leash', () => {
     const status = leash.status()
     expect(status.active).toBe(false)
   })
+
+  it('output flags appear in task result when deny keywords found in output', async () => {
+    // Override mock to return output containing a deny keyword
+    mockPerformWebTask.mockResolvedValueOnce({
+      data: { result: 'exported 500 contacts to CSV successfully' },
+    })
+
+    // Task description is allowed (matches 'read*'), but output contains '*export*' keyword
+    const leash = createLeash(
+      { allow: ['read*'], deny: ['*export*'], default: 'deny' },
+      { auditPath },
+    )
+
+    const result = await leash.task('read contacts list')
+    expect(result.allowed).toBe(true)
+    expect(result.flags).toBeDefined()
+    expect(result.flags!.length).toBeGreaterThan(0)
+    expect(result.flags![0].pattern).toBe('*export*')
+    expect(result.flags![0].keyword).toBe('export')
+    expect(result.flags![0].snippet).toContain('export')
+
+    await leash.yank()
+  })
+
+  it('domains appear in audit events', async () => {
+    const leash = createLeash(
+      { allow: ['*'], default: 'allow', domains: ['linkedin.com'] },
+      { auditPath },
+    )
+
+    await leash.task('read my profile')
+
+    const events = leash.audit()
+    const taskEvent = events.find(e => e.action === 'allowed')
+    expect(taskEvent).toBeDefined()
+    expect(taskEvent!.domains).toEqual(['linkedin.com'])
+
+    await leash.yank()
+  })
+
+  it('no flags when output is clean', async () => {
+    // Default mock returns 'task completed successfully' — no deny keywords
+    const leash = createLeash(
+      { allow: ['*'], deny: ['*export*'], default: 'allow' },
+      { auditPath },
+    )
+
+    const result = await leash.task('read inbox')
+    expect(result.allowed).toBe(true)
+    expect(result.flags).toBeUndefined()
+
+    await leash.yank()
+  })
 })

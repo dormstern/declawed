@@ -5,6 +5,13 @@ export interface LeashConfig {
   expire?: string
   maxActions?: number
   agent?: string
+  domains?: string[]
+}
+
+export interface OutputFlag {
+  pattern: string
+  keyword: string
+  snippet: string
 }
 
 export interface LeashResult {
@@ -12,6 +19,7 @@ export interface LeashResult {
   output?: string
   reason?: string
   auditId: string
+  flags?: OutputFlag[]
 }
 
 export interface AuditEvent {
@@ -22,6 +30,8 @@ export interface AuditEvent {
   action: 'allowed' | 'blocked' | 'error' | 'killed'
   reason?: string
   duration?: number
+  flags?: OutputFlag[]
+  domains?: string[]
 }
 
 export interface LeashStatus {
@@ -42,4 +52,5 @@ export interface YamlPolicy {
   default?: 'allow' | 'deny'
   expire_after?: string
   max_actions?: number
+  domains?: string[]
 }
