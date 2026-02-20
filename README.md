@@ -8,6 +8,8 @@ Policy, audit, kill switch for any AI agent with access to your accounts.
 [![license](https://img.shields.io/npm/l/declawed)](./LICENSE)
 [![tests](https://img.shields.io/badge/tests-67%20passing-brightgreen)](#)
 
+**[See the full showcase →](https://behalf-gray.vercel.app/shield/)**
+
 ### OpenClaw sales bot — declawed
 
 ![OpenClaw demo](docs/demos/openclaw-demo.gif)
@@ -155,37 +157,56 @@ Read records, update fields, search contacts — allowed. Bulk-delete, export pi
 
 ---
 
-## How It Protects You
+## AI got hands. We control the grip.
 
-Your credentials live in AnchorBrowser, not in your code. Your agent never sees your password — it gets a scoped, ephemeral session, and declawed controls what it can do.
+Think of a crane operator. The brain decides what to move — but the joystick decides how far the arm can reach. **declawed is the joystick between the AI agent and your accounts.**
 
-**Three layers of protection:**
-
-1. **Credential isolation** — your password stays in AnchorBrowser. The agent gets a pre-authenticated session, never the credentials themselves.
-2. **Scoped permissions** — the agent can only do what your policy allows. Read inbox? Yes. Delete contacts? Blocked. It can't go beyond the scope you define.
-3. **Audit + kill switch** — every action logged (allowed and blocked). Budget enforced. Instant session destruction when you're done.
+### Without declawed
 
 ```mermaid
-flowchart TD
-    A["🔑 <b>One-time setup</b><br/>Create AnchorBrowser profile<br/>Log into LinkedIn / Gmail manually<br/>Auth saved — password never leaves AnchorBrowser"] --> D
+flowchart LR
+    A["🤖 AI Agent<br/><i>the brain</i>"]
+    B["📧 Your Accounts<br/><i>LinkedIn, Gmail, CRM</i>"]
 
-    D["🤖 Agent calls <b>shield.task</b>"] --> E{"🛡️ <b>declawed</b><br/>Policy check"}
+    A -- "🔴 your password<br/>full access" --> B
 
-    E -->|"✅ Allowed"| F["☁️ <b>AnchorBrowser</b><br/>Ephemeral cloud session<br/>with your saved profile<br/>Already logged in"]
-    E -->|"❌ Blocked"| G["🚫 <b>Stopped</b><br/>Agent never reaches<br/>your account"]
-
-    F --> H["Task executes in<br/>isolated cloud browser"]
-    H --> I["Result returned to agent"]
-
-    G --> J["📝 Every action logged"]
-    I --> J
-    J --> K["⏱️ Budget enforced<br/>🔴 Kill switch ready"]
-
-    style A fill:#1565c0,color:#fff
-    style E fill:#f57f17,color:#fff
-    style F fill:#388e3c,color:#fff
-    style G fill:#d32f2f,color:#fff
+    style A fill:#fef2f2,stroke:#fca5a5,color:#991b1b
+    style B fill:#fef2f2,stroke:#fca5a5,color:#991b1b
 ```
+
+> **The agent IS you.** Full access. No limits. No off switch.
+
+### With declawed
+
+```mermaid
+flowchart LR
+    A["🤖 AI Agent<br/><i>the brain</i>"]
+    S["🛡️ declawed<br/><i>the joystick</i>"]
+    B["📧 Your Accounts<br/><i>LinkedIn, Gmail, CRM</i>"]
+
+    A -- "requests action" --> S
+    S -- "🟢 scoped access" --> B
+
+    style A fill:#f0fdf4,stroke:#86efac,color:#166534
+    style S fill:#ede9fc,stroke:#6d5bd0,color:#6d5bd0
+    style B fill:#f0fdf4,stroke:#86efac,color:#166534
+```
+
+> **The agent works through controlled arms.** You decide what moves.
+
+| | |
+|---|---|
+| ✅ read inbox | ✅ list messages |
+| ❌ delete data | ❌ export contacts |
+| ⏱️ 60 min limit | 🔢 50 actions max |
+
+> *A crane operator doesn't carry the steel himself. He moves joysticks that control arms — limited to a work zone, every movement tracked, with an emergency stop within reach. That's what declawed does for AI agents.*
+
+### Three layers of protection
+
+1. **Credential isolation** — your password stays in an isolated cloud browser. The agent gets a pre-authenticated session, never the credentials themselves.
+2. **Scoped boundaries** — the agent can only do what your policy allows. Read inbox? Yes. Delete contacts? Blocked before it starts.
+3. **Audit + kill switch** — every action logged (allowed and blocked). Budget enforced. Instant session destruction when you're done.
 
 ## CLI
 
