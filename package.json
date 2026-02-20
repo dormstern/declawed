@@ -1,5 +1,5 @@
 {
-  "name": "declawed",
+  "name": "leashed",
   "version": "0.1.1",
   "description": "Your AI agent has your credentials. This gives it rules. Policy, audit, kill switch for OpenClaw agents.",
   "type": "module",
@@ -12,7 +12,7 @@
     }
   },
   "bin": {
-    "declawed": "dist/cli.js"
+    "leashed": "dist/cli.js"
   },
   "scripts": {
     "build": "tsc",
@@ -27,7 +27,7 @@
     "llm-security",
     "agent-governance",
     "openclaw",
-    "declawed",
+    "leashed",
     "browser-automation",
     "anchorbrowser",
     "policy-engine",
@@ -45,11 +45,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dormstern/declawed.git"
+    "url": "git+https://github.com/dormstern/leashed.git"
   },
-  "homepage": "https://github.com/dormstern/declawed#readme",
+  "homepage": "https://github.com/dormstern/leashed#readme",
   "bugs": {
-    "url": "https://github.com/dormstern/declawed/issues"
+    "url": "https://github.com/dormstern/leashed/issues"
   },
   "dependencies": {
     "anchorbrowser": "^0.14.0",

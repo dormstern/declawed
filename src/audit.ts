@@ -16,7 +16,7 @@ export interface AuditFilters {
 /**
  * Creates an append-only JSONL audit logger.
  */
-export function createAuditLogger(filePath: string = './shield-audit.jsonl'): AuditLogger {
+export function createAuditLogger(filePath: string = './leash-audit.jsonl'): AuditLogger {
   return {
     log(event: AuditEvent): void {
       const line = JSON.stringify(event) + '\n'

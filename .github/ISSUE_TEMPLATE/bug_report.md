@@ -10,7 +10,7 @@ assignees: ''
 
 **What did you expect?**
 
-**Policy config (shield.yaml or inline)**
+**Policy config (leash.yaml or inline)**
 
 ```yaml
 
@@ -18,5 +18,5 @@ assignees: ''
 
 **Environment**
 - Node version:
-- declawed version:
+- leashed version:
 - OS:

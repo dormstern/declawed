@@ -2,23 +2,23 @@ import { writeFileSync, existsSync } from 'node:fs'
 import { loadPolicy, evaluatePolicy } from './policy.js'
 import { createAuditLogger, type AuditLogger } from './audit.js'
 import { createSessionManager, type SessionManager } from './session.js'
-import type { ShieldConfig, ShieldResult, AuditEvent, ShieldStatus } from './types.js'
+import type { LeashConfig, LeashResult, AuditEvent, LeashStatus } from './types.js'
 import { SESSION_FILE, DEFAULT_AUDIT_FILE } from './constants.js'
 
-export type { ShieldConfig, ShieldResult, AuditEvent, ShieldStatus } from './types.js'
+export type { LeashConfig, LeashResult, AuditEvent, LeashStatus } from './types.js'
 export { loadPolicy, evaluatePolicy, matchesPattern } from './policy.js'
 export { createAuditLogger } from './audit.js'
 export { createSessionManager } from './session.js'
 export { SESSION_FILE, DEFAULT_AUDIT_FILE } from './constants.js'
 
-export interface Shield {
-  task(description: string): Promise<ShieldResult>
-  kill(): Promise<void>
+export interface Leash {
+  task(description: string): Promise<LeashResult>
+  yank(): Promise<void>
   audit(): AuditEvent[]
-  status(): ShieldStatus
+  status(): LeashStatus
 }
 
-export interface CreateShieldOptions {
+export interface CreateLeashOptions {
   anchorApiKey?: string
   auditPath?: string
 }
@@ -26,13 +26,13 @@ export interface CreateShieldOptions {
 /**
  * Create a governance-wrapped AnchorBrowser session.
  *
- * @param configOrPath - YAML file path or inline ShieldConfig
+ * @param configOrPath - YAML file path or inline LeashConfig
  * @param options - Optional overrides (API key, audit path)
  */
-export function createShield(
-  configOrPath: string | ShieldConfig,
-  options?: CreateShieldOptions,
-): Shield {
+export function createLeash(
+  configOrPath: string | LeashConfig,
+  options?: CreateLeashOptions,
+): Leash {
   const config = loadPolicy(configOrPath)
 
   // Validate config at construction time
@@ -48,7 +48,7 @@ export function createShield(
   const auditPath = options?.auditPath ?? DEFAULT_AUDIT_FILE
   const logger: AuditLogger = createAuditLogger(auditPath)
   const session: SessionManager = createSessionManager(apiKey)
-  const agentName = config.agent ?? 'shield-agent'
+  const agentName = config.agent ?? 'leash-agent'
 
   const startTime = Date.now()
   let actionCount = 0
@@ -62,7 +62,7 @@ export function createShield(
 
   if (expireMs) {
     expireTimer = setTimeout(() => {
-      shield.kill()
+      leash.yank()
     }, expireMs)
     expireTimer.unref()
   }
@@ -78,8 +78,8 @@ export function createShield(
     return null
   }
 
-  const shield: Shield = {
-    async task(description: string): Promise<ShieldResult> {
+  const leash: Leash = {
+    async task(description: string): Promise<LeashResult> {
       const auditId = generateId()
       const taskStart = Date.now()
 
@@ -128,12 +128,12 @@ export function createShield(
         const output = await session.execute(description)
         const duration = Date.now() - taskStart
 
-        // Persist session ID for CLI kill switch
+        // Persist session ID for CLI yank switch
         try {
           const sid = session.getSessionId()
           if (sid) writeFileSync(SESSION_FILE, sid, { mode: 0o600 })
         } catch {
-          // Non-fatal: CLI kill won't work but task still succeeds
+          // Non-fatal: CLI yank won't work but task still succeeds
         }
 
         const event: AuditEvent = {
@@ -166,7 +166,7 @@ export function createShield(
       }
     },
 
-    async kill(): Promise<void> {
+    async yank(): Promise<void> {
       if (killed) return
       killed = true
       if (expireTimer) clearTimeout(expireTimer)
@@ -174,7 +174,7 @@ export function createShield(
       try {
         await session.kill()
       } catch {
-        // Log the kill event regardless — session may be gone but we need the audit record
+        // Log the yank event regardless — session may be gone but we need the audit record
       }
 
       const event: AuditEvent = {
@@ -199,7 +199,7 @@ export function createShield(
       return logger.export()
     },
 
-    status(): ShieldStatus {
+    status(): LeashStatus {
       const uptimeMs = Date.now() - startTime
       return {
         active: !killed,
@@ -212,7 +212,7 @@ export function createShield(
     },
   }
 
-  return shield
+  return leash
 }
 
 function parseDuration(str: string): number {

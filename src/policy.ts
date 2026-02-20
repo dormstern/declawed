@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import yaml from 'js-yaml'
 import picomatch from 'picomatch'
-import type { ShieldConfig, YamlPolicy } from './types.js'
+import type { LeashConfig, YamlPolicy } from './types.js'
 
 /**
  * Strip invisible Unicode characters that could bypass deny patterns.
@@ -34,7 +34,7 @@ function ensureStringArray(arr: unknown[], label: string): string[] {
 /**
  * Load policy from a YAML file path or inline config object.
  */
-export function loadPolicy(configOrPath: string | ShieldConfig): ShieldConfig {
+export function loadPolicy(configOrPath: string | LeashConfig): LeashConfig {
   if (typeof configOrPath === 'string') {
     const raw = readFileSync(configOrPath, 'utf-8')
     const doc = yaml.load(raw)
@@ -73,7 +73,7 @@ export function matchesPattern(task: string, pattern: string): boolean {
  */
 export function evaluatePolicy(
   task: string,
-  config: ShieldConfig,
+  config: LeashConfig,
 ): { allowed: boolean; reason?: string } {
   const sanitized = sanitizeTask(task)
 

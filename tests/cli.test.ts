@@ -26,7 +26,7 @@ describe('CLI', () => {
         ...e,
       }),
     )
-    writeFileSync(join(tmpDir, 'shield-audit.jsonl'), lines.join('\n') + '\n')
+    writeFileSync(join(tmpDir, 'leash-audit.jsonl'), lines.join('\n') + '\n')
   }
 
   function runCli(args: string): string {

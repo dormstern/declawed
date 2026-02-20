@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Demo: an OpenClaw sales bot — governed by declawed
+// Demo: an OpenClaw sales bot — governed by leashed
 // This is what it looks like when your agent has rules.
 
 import { loadPolicy, evaluatePolicy } from './dist/policy.js'
@@ -28,7 +28,7 @@ const tasks = [
   'send bulk connection requests',
 ]
 
-console.log(`${BOLD}declawed${RESET} ${DIM}v0.1.0${RESET}`)
+console.log(`${BOLD}leashed${RESET} ${DIM}v0.1.0${RESET}`)
 console.log(`${DIM}agent: my-openclaw-sales-bot | policy: deny-first | budget: 50 actions | expires: 60min${RESET}`)
 console.log()
 
@@ -47,4 +47,4 @@ for (const task of tasks) {
 }
 
 console.log()
-console.log(`${DIM}${allowed} allowed · ${blocked} blocked · audit: shield-audit.jsonl${RESET}`)
+console.log(`${DIM}${allowed} allowed · ${blocked} blocked · audit: leash-audit.jsonl${RESET}`)

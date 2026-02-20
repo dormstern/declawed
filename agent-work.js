@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Demo: a knowledge worker assistant — governed by declawed
+// Demo: a knowledge worker assistant — governed by leashed
 // Think Claude Computer Use, Devin, or any AI work assistant.
 
 import { loadPolicy, evaluatePolicy } from './dist/policy.js'
@@ -28,7 +28,7 @@ const tasks = [
   'share document with billing admin',
 ]
 
-console.log(`${BOLD}declawed${RESET} ${DIM}v0.1.0${RESET}`)
+console.log(`${BOLD}leashed${RESET} ${DIM}v0.1.0${RESET}`)
 console.log(`${DIM}agent: work-assistant | policy: deny-first | budget: 200 actions | expires: 8h${RESET}`)
 console.log()
 
@@ -47,4 +47,4 @@ for (const task of tasks) {
 }
 
 console.log()
-console.log(`${DIM}${allowed} allowed · ${blocked} blocked · audit: shield-audit.jsonl${RESET}`)
+console.log(`${DIM}${allowed} allowed · ${blocked} blocked · audit: leash-audit.jsonl${RESET}`)

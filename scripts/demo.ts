@@ -1,5 +1,5 @@
 #!/usr/bin/env npx tsx
-// Demo script for declawed — shows policy enforcement with colorized output
+// Demo script for leashed — shows policy enforcement with colorized output
 // Used for GIF recording with VHS (appears as "node agent.js" in the tape)
 
 import { loadPolicy, evaluatePolicy } from '../src/policy.js'
@@ -28,7 +28,7 @@ const tasks = [
   'send bulk connection requests',
 ]
 
-console.log(`${BOLD}declawed${RESET} ${DIM}v0.1.0${RESET}`)
+console.log(`${BOLD}leashed${RESET} ${DIM}v0.1.0${RESET}`)
 console.log(`${DIM}agent: my-openclaw-sales-bot | policy: deny-first | budget: 50 actions | expires: 60min${RESET}`)
 console.log()
 
@@ -47,4 +47,4 @@ for (const task of tasks) {
 }
 
 console.log()
-console.log(`${DIM}${allowed} allowed · ${blocked} blocked · audit: shield-audit.jsonl${RESET}`)
+console.log(`${DIM}${allowed} allowed · ${blocked} blocked · audit: leash-audit.jsonl${RESET}`)

@@ -1,4 +1,4 @@
-Output docs/demos/declawed-demo.gif
+Output docs/demos/leashed-demo.gif
 Set FontSize 15
 Set Width 860
 Set Height 420

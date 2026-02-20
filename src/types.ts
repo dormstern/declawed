@@ -1,4 +1,4 @@
-export interface ShieldConfig {
+export interface LeashConfig {
   allow?: string[]
   deny?: string[]
   default?: 'allow' | 'deny'
@@ -7,7 +7,7 @@ export interface ShieldConfig {
   agent?: string
 }
 
-export interface ShieldResult {
+export interface LeashResult {
   allowed: boolean
   output?: string
   reason?: string
@@ -24,7 +24,7 @@ export interface AuditEvent {
   duration?: number
 }
 
-export interface ShieldStatus {
+export interface LeashStatus {
   active: boolean
   agent: string
   uptime: string

@@ -1,15 +1,15 @@
-# declawed API Reference
+# leashed API Reference
 
-## `createShield(configOrPath, options?)`
+## `createLeash(configOrPath, options?)`
 
 Create a governance-wrapped AnchorBrowser session.
 
 ```typescript
 // From YAML file
-const shield = createShield('./shield.yaml')
+const leash = createLeash('./leash.yaml')
 
 // From inline config
-const shield = createShield({
+const leash = createLeash({
   allow: ['read*'],
   deny: ['*send*'],
   default: 'deny',
@@ -19,46 +19,46 @@ const shield = createShield({
 })
 
 // With options
-const shield = createShield('./shield.yaml', {
+const leash = createLeash('./leash.yaml', {
   anchorApiKey: 'your-key',  // default: process.env.ANCHOR_API_KEY
-  auditPath: './logs/audit.jsonl',  // default: ./shield-audit.jsonl
+  auditPath: './logs/audit.jsonl',  // default: ./leash-audit.jsonl
 })
 ```
 
-## `shield.task(description)`
+## `leash.task(description)`
 
 Execute a task through the governance layer.
 
 ```typescript
-const result = await shield.task('read my inbox')
+const result = await leash.task('read my inbox')
 // → { allowed: true, output: '...', auditId: 'evt-...' }
 // → { allowed: false, reason: 'blocked by deny pattern: *send*', auditId: 'evt-...' }
 ```
 
-## `shield.kill()`
+## `leash.yank()`
 
 Destroy the AnchorBrowser session immediately.
 
 ```typescript
-await shield.kill()
+await leash.yank()
 // Session destroyed, event logged, done.
 ```
 
-## `shield.audit()`
+## `leash.audit()`
 
 Return all audit events.
 
 ```typescript
-const events = shield.audit()
+const events = leash.audit()
 // → [{ id, timestamp, agent, task, action, reason?, duration? }, ...]
 ```
 
-## `shield.status()`
+## `leash.status()`
 
 Return current session stats.
 
 ```typescript
-const status = shield.status()
+const status = leash.status()
 // → { active: true, agent: 'inbox-assistant', uptime: '47min', allowed: 23, blocked: 3 }
 ```
 
@@ -114,7 +114,7 @@ max_actions: 20
 ### Inline (no YAML file)
 
 ```typescript
-const shield = createShield({
+const leash = createLeash({
   allow: ['read*', 'list*'],
   deny: ['*send*', '*delete*'],
   default: 'deny',
@@ -134,7 +134,7 @@ const shield = createShield({
 
 ## Audit Log Format
 
-Every action is logged to `shield-audit.jsonl`:
+Every action is logged to `leash-audit.jsonl`:
 
 ```jsonl
 {"id":"evt-1708300000-x4k2m","timestamp":"2026-02-19T10:00:00.000Z","agent":"inbox-assistant","task":"read my inbox","action":"allowed","duration":2340}
@@ -152,27 +152,27 @@ JSONL format means:
 ### From code
 
 ```typescript
-await shield.kill()
+await leash.yank()
 ```
 
 ### From terminal
 
 ```bash
-npx declawed kill
+npx leashed kill
 # → Session mock-session-123 killed.
 ```
 
 ### Check status
 
 ```bash
-npx declawed status
+npx leashed status
 # Agent:   inbox-assistant
 # Status:  active
 # Allowed: 23
 # Blocked: 3
 # Total:   27
 
-npx declawed audit
+npx leashed audit
 # Time                      Action    Task
 # ─────────────────────────────────────────────
 # 2026-02-19 10:00:00  allowed   read my inbox
@@ -192,4 +192,4 @@ For vulnerability reports, see [SECURITY.md](../SECURITY.md).
 
 ## Testing
 
-61 tests covering the governance boundary: policy evaluation, deny-first ordering, Unicode bypass vectors, YAML validation, audit logging, budget enforcement, concurrent access, timer expiration, kill idempotency, and fail-closed behavior. AnchorBrowser is mocked because declawed's job is policy enforcement, not browser automation — if the browser fails, declawed fails closed.
+61 tests covering the governance boundary: policy evaluation, deny-first ordering, Unicode bypass vectors, YAML validation, audit logging, budget enforcement, concurrent access, timer expiration, kill idempotency, and fail-closed behavior. AnchorBrowser is mocked because leashed's job is policy enforcement, not browser automation — if the browser fails, leashed fails closed.

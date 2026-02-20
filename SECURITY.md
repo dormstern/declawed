@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in `declawed`, **please do not file a public issue.**
+If you discover a security vulnerability in `leashed`, **please do not file a public issue.**
 
 Email: **dormstern@gmail.com**
 
@@ -15,13 +15,13 @@ We will acknowledge receipt within 48 hours and aim to release a fix within 7 da
 
 ## Scope
 
-`declawed` is responsible for:
+`leashed` is responsible for:
 - Policy evaluation (deny/allow pattern matching)
 - Audit log integrity (append-only JSONL)
 - Session lifecycle (create, kill, budget enforcement)
 - Input sanitization (Unicode bypass protection)
 
-`declawed` is **not** responsible for:
+`leashed` is **not** responsible for:
 - AnchorBrowser SDK security (report to [AnchorBrowser](https://anchorbrowser.io))
 - Semantic prompt injection (glob patterns are a coarse filter, not a semantic security boundary)
 - Credential storage (API keys are your responsibility)

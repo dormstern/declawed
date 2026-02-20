@@ -1,7 +1,7 @@
-import { createShield } from 'declawed'
+import { createLeash } from 'leashed'
 
-// Create a shield with inline policy
-const shield = createShield({
+// Create a leash with inline policy
+const leash = createLeash({
   allow: ['read*', 'list*', 'check*'],
   deny: ['*send*', '*delete*', '*settings*'],
   expire: '60min',
@@ -9,17 +9,17 @@ const shield = createShield({
 })
 
 // These will be policy-checked + audited
-const r1 = await shield.task('read my inbox')
+const r1 = await leash.task('read my inbox')
 console.log('read inbox:', r1.allowed, r1.output?.slice(0, 80))
 
-const r2 = await shield.task('send message to Bob')
+const r2 = await leash.task('send message to Bob')
 console.log('send message:', r2.allowed, r2.reason)
 
 // Check status
-console.log('status:', shield.status())
+console.log('status:', leash.status())
 
 // View audit log
-console.log('audit:', shield.audit())
+console.log('audit:', leash.audit())
 
 // Kill when done
-await shield.kill()
+await leash.yank()

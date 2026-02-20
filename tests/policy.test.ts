@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { join } from 'node:path'
 import { writeFileSync, mkdirSync, rmSync } from 'node:fs'
 import { loadPolicy, matchesPattern, evaluatePolicy } from '../src/policy.js'
-import type { ShieldConfig } from '../src/types.js'
+import type { LeashConfig } from '../src/types.js'
 
 describe('matchesPattern', () => {
   it('matches exact string', () => {
@@ -32,7 +32,7 @@ describe('matchesPattern', () => {
 })
 
 describe('Unicode bypass protection', () => {
-  const config: ShieldConfig = {
+  const config: LeashConfig = {
     allow: ['read*'],
     deny: ['*send*', '*delete*'],
     default: 'deny',
@@ -78,7 +78,7 @@ describe('Unicode bypass protection', () => {
 })
 
 describe('evaluatePolicy', () => {
-  const config: ShieldConfig = {
+  const config: LeashConfig = {
     allow: ['read*', 'list*', 'check*'],
     deny: ['*send*', '*delete*', '*settings*'],
     default: 'deny',
@@ -109,7 +109,7 @@ describe('evaluatePolicy', () => {
   })
 
   it('falls back to default allow when configured', () => {
-    const permissive: ShieldConfig = {
+    const permissive: LeashConfig = {
       deny: ['*delete*'],
       default: 'allow',
     }
@@ -118,13 +118,13 @@ describe('evaluatePolicy', () => {
   })
 
   it('handles empty config with default deny', () => {
-    const empty: ShieldConfig = { default: 'deny' }
+    const empty: LeashConfig = { default: 'deny' }
     const result = evaluatePolicy('anything', empty)
     expect(result.allowed).toBe(false)
   })
 
   it('handles empty config with default allow', () => {
-    const empty: ShieldConfig = { default: 'allow' }
+    const empty: LeashConfig = { default: 'allow' }
     const result = evaluatePolicy('anything', empty)
     expect(result.allowed).toBe(true)
   })
@@ -171,7 +171,7 @@ default: deny
 expire_after: 60min
 max_actions: 100
 `
-    const filePath = join(tmpDir, 'shield.yaml')
+    const filePath = join(tmpDir, 'leash.yaml')
     writeFileSync(filePath, yamlContent)
 
     const config = loadPolicy(filePath)
@@ -201,7 +201,7 @@ rules:
   })
 
   it('throws for non-existent file', () => {
-    expect(() => loadPolicy('/nonexistent/shield.yaml')).toThrow()
+    expect(() => loadPolicy('/nonexistent/leash.yaml')).toThrow()
   })
 
   it('throws for YAML that parses to a non-object', () => {
