@@ -8,7 +8,7 @@ Your agent gets be-half the access. The safe half. Policy, audit, kill switch fo
 [![license](https://img.shields.io/npm/l/leashed)](./LICENSE)
 [![tests](https://img.shields.io/badge/tests-67%20passing-brightgreen)](#)
 
-**[See the full showcase →](https://behalf-gray.vercel.app/harness/)**
+**[See the full showcase →](https://behalf.work/harness/)**
 
 ### OpenClaw sales bot — leashed
 
@@ -228,7 +228,7 @@ AnchorBrowser handles the browser. leashed handles the rules.
 
 ## Why This Exists
 
-[Behalf](https://behalf-gray.vercel.app) already powers safe delegation for humans — scoped sessions, audit trails, and instant revocation for people who delegate work through their accounts. We built the trust infrastructure, battle-tested it, and realized: **agents need the exact same thing.**
+[Behalf](https://behalf.work) already powers safe delegation for humans — scoped sessions, audit trails, and instant revocation for people who delegate work through their accounts. We built the trust infrastructure, battle-tested it, and realized: **agents need the exact same thing.**
 
 42,000 live credentials leaked from AI agent workflows. The community's best workaround is buying a separate Mac Mini. That's not security — that's surrender.
 
